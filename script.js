@@ -1033,9 +1033,9 @@ function createTables() {
 function showQR(tableNumber) {
 
   const baseURL =
-    window.location.origin +
-    window.location.pathname;
-
+  "https://vijaytadvi119-del.github.io/foodie-rastaurent/";
+    
+    
   const tableURL =
     baseURL +
     "?table=" +
