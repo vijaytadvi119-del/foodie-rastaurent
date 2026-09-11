@@ -25,13 +25,9 @@ let pendingOtp = null;
 document.addEventListener("DOMContentLoaded", function () {
   initializeData();
 
-  if (localStorage.getItem(STORAGE.session) === "true") {
-    openDashboard();
-  } else {
-    showAuthBox("loginBox");
-  }
+  // LOGIN TEMPORARILY DISABLED
+  openDashboard();
 });
-
 
 function initializeData() {
   if (!localStorage.getItem(STORAGE.menu)) {
