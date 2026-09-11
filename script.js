@@ -851,4 +851,10 @@ function escapeHTML(value) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
-    .replac
+    .replaceAll("'", "&#039;");
+}
+
+
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
