@@ -854,7 +854,6 @@ function escapeHTML(value) {
     .replaceAll("'", "&#039;");
 }
 
-
 function escapeAttribute(value) {
   return escapeHTML(value);
 }
