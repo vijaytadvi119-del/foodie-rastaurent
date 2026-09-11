@@ -3,427 +3,383 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Foodie - Restaurant Dashboard</title>
+
+  <!-- Google font for the Foodie-style handwritten look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- =========================
-       BACKGROUND WALLPAPER
-       ========================= -->
-  <div class="wallpaper"></div>
-
-  <!-- =========================
-       SIDEBAR
-       ========================= -->
-  <aside class="sidebar">
-
-    <div class="logo">
-      <span>🍴</span>
-      <h2>Foodie</h2>
-    </div>
-
-    <button class="nav-btn active" onclick="showPage('home', this)">
-      🏠 <span>Home</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('orders', this)">
-      🧾 <span>Live Orders</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('menu', this)">
-      🍔 <span>Menu Edit</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('qr', this)">
-      📱 <span>QR Edit</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('settings', this)">
-      ⚙️ <span>Settings</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('profile', this)">
-      👤 <span>My Profile</span>
-    </button>
-
-    <div class="sidebar-bottom">
-      <button class="nav-btn logout" onclick="logout()">
-        🚪 <span>Logout</span>
-      </button>
-    </div>
-
-  </aside>
-
-
-  <!-- =========================
-       MAIN AREA
-       ========================= -->
-  <main class="main">
-
-    <!-- TOP BAR -->
-    <header class="topbar">
-      <div>
-        <h1 id="pageTitle">Dashboard</h1>
-        <p>Manage your restaurant easily</p>
+  <!-- =========================================================
+       LOGIN / REGISTER / FORGOT PASSWORD
+       Frontend demo: OTP is simulated. Real SMS OTP needs backend.
+       ========================================================= -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-panel">
+      <div class="brand">
+        <div class="brand-logo">👨‍🍳</div>
+        <div class="brand-name">Foodie</div>
+        <div class="brand-tag">Good Food <b>•</b> Good Mood</div>
       </div>
 
-      <div class="owner">
-        <div class="owner-avatar">P</div>
-        <div>
-          <strong>TADVI PIYUSH</strong>
-          <small>Restaurant Owner</small>
+      <div id="loginBox" class="auth-box">
+        <h2>Welcome Back!</h2>
+        <p class="muted">Please login to continue</p>
+
+        <label>Mobile Number</label>
+        <input id="loginMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+
+        <label>Password</label>
+        <div class="password-wrap">
+          <input id="loginPassword" type="password" placeholder="Password">
+          <button class="eye-btn" type="button" onclick="togglePassword('loginPassword', this)">◉</button>
         </div>
+
+        <button class="main-btn" type="button" onclick="loginUser()">Login →</button>
+
+        <button class="link-btn" type="button" onclick="showAuthBox('forgotBox')">Forgot Password?</button>
+
+        <div class="or"><span>or</span></div>
+
+        <button class="google-btn" type="button" onclick="demoGoogleLogin()">G&nbsp;&nbsp; Continue with Google</button>
+
+        <p class="auth-bottom">Don't have an account?
+          <button class="text-link" type="button" onclick="showAuthBox('registerBox')">Register</button>
+        </p>
       </div>
-    </header>
+
+      <div id="registerBox" class="auth-box hidden">
+        <h2>Create Account</h2>
+        <p class="muted">One mobile number = one account</p>
+
+        <label>Full Name</label>
+        <input id="regName" type="text" placeholder="Your name">
+
+        <label>Mobile Number</label>
+        <input id="regMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+
+        <label>Password</label>
+        <input id="regPassword" type="password" placeholder="Create password">
+
+        <label>Confirm Password</label>
+        <input id="regPassword2" type="password" placeholder="Confirm password">
+
+        <button class="main-btn" type="button" onclick="registerUser()">Create Account</button>
+
+        <p class="auth-bottom">Already have an account?
+          <button class="text-link" type="button" onclick="showAuthBox('loginBox')">Login</button>
+        </p>
+      </div>
+
+      <div id="forgotBox" class="auth-box hidden">
+        <h2>Forgot Password</h2>
+        <p class="muted">Enter your registered mobile number.</p>
+
+        <div id="forgotStep1">
+          <label>Mobile Number</label>
+          <input id="forgotMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+          <button class="main-btn" type="button" onclick="sendOtp()">Send OTP</button>
+        </div>
+
+        <div id="forgotStep2" class="hidden">
+          <label>OTP</label>
+          <input id="otpInput" type="tel" inputmode="numeric" maxlength="6" placeholder="6-digit OTP">
+
+          <label>New Password</label>
+          <input id="newPassword" type="password" placeholder="New password">
+
+          <button class="main-btn" type="button" onclick="resetPassword()">Verify OTP & Reset</button>
+
+          <p id="otpHint" class="otp-hint"></p>
+        </div>
+
+        <p class="auth-bottom">
+          <button class="text-link" type="button" onclick="showAuthBox('loginBox')">← Back to Login</button>
+        </p>
+      </div>
+
+      <p id="authMessage" class="auth-message"></p>
+    </div>
+
+    <div class="auth-hero">
+      <div class="hero-overlay">
+        <div class="hero-small">Good Food&nbsp; • &nbsp;Good Mood</div>
+        <h1>Fresh Food<br>For A <span>Better Mood</span></h1>
+        <p>Great taste, fresh ingredients,<br>and a cozy place to enjoy.</p>
+      </div>
+    </div>
+  </div>
 
 
-    <!-- =========================
-         HOME
-         ========================= -->
-    <section id="home" class="page active-page">
+  <!-- =========================================================
+       DASHBOARD
+       ========================================================= -->
+  <div id="appScreen" class="app-screen hidden">
 
-      <div class="welcome">
+    <div class="wallpaper"></div>
+
+    <aside class="sidebar">
+      <div class="logo">
+        <span>👨‍🍳</span>
+        <h2>Foodie</h2>
+      </div>
+
+      <button class="nav-btn active" onclick="showPage('home', this)">🏠 <span>Home</span></button>
+      <button class="nav-btn" onclick="showPage('orders', this)">🧾 <span>Live Orders</span></button>
+      <button class="nav-btn" onclick="showPage('menu', this)">🍔 <span>Menu Edit</span></button>
+      <button class="nav-btn" onclick="showPage('qr', this)">📱 <span>QR Edit</span></button>
+      <button class="nav-btn" onclick="showPage('settings', this)">⚙️ <span>Settings</span></button>
+      <button class="nav-btn" onclick="showPage('profile', this)">👤 <span>My Profile</span></button>
+
+      <div class="sidebar-bottom">
+        <button class="nav-btn logout" onclick="logout()">🚪 <span>Logout</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
         <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p>Manage your restaurant easily</p>
+        </div>
+
+        <div class="owner">
+          <div id="ownerAvatar" class="owner-avatar">P</div>
+          <div>
+            <strong id="ownerNameTop">TADVI PIYUSH</strong>
+            <small>Restaurant Owner</small>
+          </div>
+        </div>
+      </header>
+
+
+      <!-- HOME -->
+      <section id="home" class="page active-page">
+        <div class="welcome">
           <h2>Welcome back 👋</h2>
           <p>Here is your restaurant overview.</p>
         </div>
-      </div>
 
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">🧾</div>
+            <h3>Today's Orders</h3>
+            <strong id="orderCount">2</strong>
+            <p>Orders received today</p>
+          </div>
 
-      <div class="cards">
+          <div class="card">
+            <div class="card-icon">🍔</div>
+            <h3>Menu Items</h3>
+            <strong id="menuCount">3</strong>
+            <p>Items available</p>
+          </div>
 
-        <div class="card">
-          <div class="card-icon">🧾</div>
-          <h3>Today's Orders</h3>
-          <strong id="orderCount">12</strong>
-          <p>Orders received today</p>
+          <div class="card">
+            <div class="card-icon">🪑</div>
+            <h3>Tables</h3>
+            <strong>50</strong>
+            <p>Tables connected</p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">💰</div>
+            <h3>Payment</h3>
+            <strong>OFF</strong>
+            <p>Payment will be added later</p>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-icon">🍔</div>
-          <h3>Menu Items</h3>
-          <strong>28</strong>
-          <p>Items available</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">🪑</div>
-          <h3>Tables</h3>
-          <strong>12</strong>
-          <p>Tables connected</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">💰</div>
-          <h3>Today's Sales</h3>
-          <strong>₹0</strong>
-          <p>Payment system coming later</p>
-        </div>
-
-      </div>
-
-
-      <div class="section-box">
-
-        <h2>Quick Actions</h2>
-
-        <div class="quick-actions">
-
-          <button onclick="showPage('orders')">
-            🧾 View Orders
-          </button>
-
-          <button onclick="showPage('menu')">
-            🍔 Edit Menu
-          </button>
-
-          <button onclick="showPage('qr')">
-            📱 Manage QR
-          </button>
+        <div class="section-box">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button onclick="showPage('orders')">🧾 View Orders</button>
+            <button onclick="showPage('menu')">🍔 Edit Menu</button>
+            <button onclick="showPage('qr')">📱 Manage QR</button>
+          </div>
 
           <!--
-          =================================
-          PAYMENT PLACEHOLDER
-          =================================
-
-          Future payment code will be added here.
-
+          ==========================================================
+          # PAYMENT - FUTURE
+          Payment code can be added here later.
+          Do not delete this placeholder.
+          ==========================================================
           -->
-
         </div>
-
-      </div>
-
-    </section>
+      </section>
 
 
-    <!-- =========================
-         LIVE ORDERS
-         ========================= -->
-    <section id="orders" class="page">
-
-      <div class="section-box">
-
-        <div class="section-header">
-          <div>
-            <h2>Live Orders</h2>
-            <p>Manage customer orders from tables.</p>
-          </div>
-
-          <span class="live">● LIVE</span>
-        </div>
-
-
-        <div class="order">
-
-          <div>
-            <h3>Table 01</h3>
-            <p>2 × Paneer Pizza</p>
-            <p>1 × Cold Drink</p>
-          </div>
-
-          <div class="order-right">
-            <strong>₹480</strong>
-            <button class="accept" onclick="acceptOrder(this)">
-              Accept
-            </button>
-          </div>
-
-        </div>
-
-
-        <div class="order">
-
-          <div>
-            <h3>Table 05</h3>
-            <p>1 × Burger</p>
-            <p>2 × French Fries</p>
-          </div>
-
-          <div class="order-right">
-            <strong>₹320</strong>
-            <button class="accept" onclick="acceptOrder(this)">
-              Accept
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         MENU EDIT
-         ========================= -->
-    <section id="menu" class="page">
-
-      <div class="section-box">
-
-        <div class="section-header">
-          <div>
-            <h2>Menu Edit</h2>
-            <p>Add and manage your food items.</p>
-          </div>
-
-          <button class="primary" onclick="addMenuItem()">
-            + Add Item
-          </button>
-        </div>
-
-
-        <div id="menuList">
-
-          <div class="menu-item">
-
+      <!-- ORDERS -->
+      <section id="orders" class="page">
+        <div class="section-box">
+          <div class="section-header">
             <div>
-              <h3>Paneer Pizza</h3>
-              <p>₹240</p>
+              <h2>Live Orders</h2>
+              <p>Accept and manage customer orders.</p>
             </div>
-
-            <button class="small-btn">
-              Edit
-            </button>
-
+            <span class="live">● LIVE</span>
           </div>
 
+          <div id="ordersList"></div>
+        </div>
+      </section>
 
-          <div class="menu-item">
 
+      <!-- MENU -->
+      <section id="menu" class="page">
+        <div class="section-box">
+          <div class="section-header">
             <div>
-              <h3>Veg Burger</h3>
-              <p>₹120</p>
+              <h2>Menu Edit</h2>
+              <p>Add food, change name/price, or delete items.</p>
             </div>
-
-            <button class="small-btn">
-              Edit
-            </button>
-
+            <button class="primary" onclick="addMenuItem()">+ Add Item</button>
           </div>
 
+          <div id="menuList"></div>
+        </div>
+      </section>
 
-          <div class="menu-item">
 
+      <!-- QR -->
+      <section id="qr" class="page">
+        <div class="section-box">
+          <div class="section-header">
             <div>
-              <h3>French Fries</h3>
-              <p>₹90</p>
+              <h2>QR Management</h2>
+              <p>Tables 01 to 50 are ready.</p>
             </div>
-
-            <button class="small-btn">
-              Edit
-            </button>
-
+            <button class="primary" onclick="refreshTables()">Refresh</button>
           </div>
 
-        </div>
+          <div id="qrGrid" class="qr-grid"></div>
 
+          <!--
+          ==========================================================
+          # PAYMENT QR - FUTURE
+          Payment QR / payment gateway can be connected later.
+          ==========================================================
+          -->
+        </div>
+      </section>
+
+
+      <!-- SETTINGS -->
+      <section id="settings" class="page">
+        <div class="section-box">
+          <h2>Settings</h2>
+
+          <div class="setting">
+            <div>
+              <h3>Restaurant Name</h3>
+              <p id="settingRestaurantName">Foodie Restaurant</p>
+            </div>
+            <button class="small-btn" onclick="editRestaurantName()">Edit</button>
+          </div>
+
+          <div class="setting">
+            <div>
+              <h3>Notifications</h3>
+              <p>Order notifications are enabled.</p>
+            </div>
+            <button id="notificationBtn" class="status-btn" onclick="toggleNotifications()">ON</button>
+          </div>
+
+          <div class="setting">
+            <div>
+              <h3>Restaurant Status</h3>
+              <p id="restaurantStatusText">OPEN</p>
+            </div>
+            <button id="statusBtn" class="status-btn" onclick="toggleRestaurantStatus()">OPEN</button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- PROFILE -->
+      <section id="profile" class="page">
+        <div class="section-box profile-box">
+          <div id="profileAvatar" class="profile-avatar">P</div>
+          <h2 id="profileName">TADVI PIYUSH</h2>
+          <p id="profileMobile">Mobile: —</p>
+          <p id="profileRestaurant">Restaurant: Foodie Restaurant</p>
+          <button class="primary" onclick="editProfile()">Edit Profile</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <!-- =========================================================
+       MODALS
+       ========================================================= -->
+
+  <div id="menuModal" class="modal hidden">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('menuModal')">×</button>
+      <h2 id="menuModalTitle">Add Food Item</h2>
+
+      <label>Food Name</label>
+      <input id="foodNameInput" type="text" placeholder="e.g. Paneer Pizza">
+
+      <label>Price</label>
+      <input id="foodPriceInput" type="number" min="0" placeholder="e.g. 240">
+
+      <label>Food Image URL (optional)</label>
+      <input id="foodImageInput" type="url" placeholder="https://...">
+
+      <div class="modal-actions">
+        <button class="primary" onclick="saveMenuItem()">Save</button>
+        <button class="small-btn" onclick="closeModal('menuModal')">Cancel</button>
       </div>
-
-    </section>
-
-
-    <!-- =========================
-         QR EDIT
-         ========================= -->
-    <section id="qr" class="page">
-
-      <div class="section-box">
-
-        <h2>QR Management</h2>
-
-        <p>
-          Manage your restaurant table QR codes.
-        </p>
+    </div>
+  </div>
 
 
-        <div class="qr-grid">
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('profileModal')">×</button>
+      <h2>Edit Profile</h2>
 
-          <div class="qr-card">
-            <div class="fake-qr">QR</div>
-            <h3>Table 01</h3>
-            <button class="primary">Manage QR</button>
-          </div>
+      <label>Name</label>
+      <input id="profileNameInput" type="text" placeholder="Your name">
 
-          <div class="qr-card">
-            <div class="fake-qr">QR</div>
-            <h3>Table 02</h3>
-            <button class="primary">Manage QR</button>
-          </div>
+      <label>Restaurant Name</label>
+      <input id="profileRestaurantInput" type="text" placeholder="Restaurant name">
 
-          <div class="qr-card">
-            <div class="fake-qr">QR</div>
-            <h3>Table 03</h3>
-            <button class="primary">Manage QR</button>
-          </div>
-
-          <div class="qr-card">
-            <div class="fake-qr">QR</div>
-            <h3>Table 04</h3>
-            <button class="primary">Manage QR</button>
-          </div>
-
-        </div>
-
-
-        <!--
-        ======================================
-        PAYMENT QR FUTURE SECTION
-        ======================================
-
-        # PAYMENT
-
-        Future payment QR / payment gateway
-        code can be connected here.
-
-        ======================================
-        -->
-
+      <div class="modal-actions">
+        <button class="primary" onclick="saveProfile()">Save</button>
+        <button class="small-btn" onclick="closeModal('profileModal')">Cancel</button>
       </div>
-
-    </section>
-
-
-    <!-- =========================
-         SETTINGS
-         ========================= -->
-    <section id="settings" class="page">
-
-      <div class="section-box">
-
-        <h2>Settings</h2>
-
-        <div class="setting">
-
-          <div>
-            <h3>Restaurant Name</h3>
-            <p>Change restaurant information.</p>
-          </div>
-
-          <button class="small-btn">Edit</button>
-
-        </div>
+    </div>
+  </div>
 
 
-        <div class="setting">
+  <div id="qrModal" class="modal hidden">
+    <div class="modal-box qr-modal-box">
+      <button class="modal-close" onclick="closeModal('qrModal')">×</button>
+      <h2 id="qrModalTitle">Table 01</h2>
+      <p id="qrModalText" class="muted"></p>
 
-          <div>
-            <h3>Notifications</h3>
-            <p>Manage order notifications.</p>
-          </div>
+      <div id="qrCode" class="qr-code"></div>
 
-          <button class="small-btn">Manage</button>
-
-        </div>
-
-
-        <div class="setting">
-
-          <div>
-            <h3>Restaurant Status</h3>
-            <p>Open / Closed</p>
-          </div>
-
-          <button class="status-btn">OPEN</button>
-
-        </div>
-
+      <div class="modal-actions">
+        <button class="primary" onclick="downloadQR()">Download QR</button>
+        <button class="small-btn" onclick="copyTableLink()">Copy Link</button>
       </div>
-
-    </section>
-
-
-    <!-- =========================
-         PROFILE
-         ========================= -->
-    <section id="profile" class="page">
-
-      <div class="section-box profile-box">
-
-        <div class="profile-avatar">
-          P
-        </div>
-
-        <h2>TADVI PIYUSH</h2>
-
-        <p>Restaurant Owner</p>
-
-        <button class="primary">
-          Edit Profile
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
+    </div>
+  </div>
 
 
+  <!-- QR library. Internet is required for QR generation in the browser. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="script.js"></script>
 
 </body>
   </html>
+  
