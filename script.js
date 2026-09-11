@@ -1,4 +1,6 @@
-/* =========================================================
+
+
+function/* =========================================================
    FOODIE RESTAURANT SYSTEM
    Frontend prototype with localStorage.
    ========================================================= */
@@ -100,9 +102,7 @@ function showAuthBox(id) {
 function setAuthMessage(message) {
   document.getElementById("authMessage").innerText = message;
 }
-
-
-function clearAuthMessage() {
+ clearAuthMessage() {
   document.getElementById("authMessage").innerText = "";
 }
 
